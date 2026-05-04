@@ -1,25 +1,21 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Inter } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
-import { auth } from "@/auth";
+import { ThemeProvider } from "@/components/providers/theme-providers";
 import { SessionProvider } from "next-auth/react";
+import { auth } from "@/auth";
+import { Toaster } from "@/components/ui/sonner";
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const poppins = Poppins({
   subsets: ["latin"],
-});
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+
+})
 
 export const metadata: Metadata = {
-  title: "Codevibe",
-  description: "Write the code with ai",
+  title: "VibeCode - Editor",
+  description: "VibeCode - Editor - Code Editor For VibeCoders is a free online code editor that lets you write, debug, and run your code in the browser. It is an open source editor that is easy to use and has a simple interface. It is also a great way to learn programming and get started with coding.",
 };
 
 export default async function RootLayout({
@@ -27,15 +23,27 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   const session = await auth()
   return (
     <SessionProvider session={session}>
-      <html
-        lang="en"
-        className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", inter.variable)}
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={` ${poppins.className} antialiased`}
       >
-        <body className="min-h-full flex flex-col">{children}</body>
-      </html>
+        <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+        >
+            <div className="flex flex-col min-h-screen">
+              <Toaster/>
+              <div className="flex-1">{children}</div>
+            </div>
+        </ThemeProvider>
+      </body>
+    </html>
     </SessionProvider>
   );
 }
