@@ -26,12 +26,15 @@ const DashboardMainPage = async () => {
           <EmptyState />
         ) : (
           // @ts-ignore
-          <ProjectTable
-            projects={playgrounds || []}
-            onDeleteProject={deleteProjectById}
-            onUpdateProject={editProjectById}
-            onDuplicateProject={duplicateProjectById}
-          />
+         <ProjectTable
+  projects={(playgrounds ?? []).map(project => ({
+    ...project,
+    description: project.description ?? "",
+  }))}
+  onDeleteProject={deleteProjectById}
+  onUpdateProject={editProjectById}
+  onDuplicateProject={duplicateProjectById}
+/>
         )}
       </div>
     </div>
